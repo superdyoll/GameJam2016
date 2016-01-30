@@ -106,78 +106,80 @@ public class Shadow : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		System.Random rand = new System.Random();
-		if (updateCount++ > updateLim) {
-			updateCount = rand.Next(updateLim - updateLim / 10);
-			setExagDir();
-		}
-		for (int i = 0; i < points.Count; i++) {
-			Point p = points[i];
-			double theta = p.getTheta();
-			if (theta < exagDir - exagRange || theta > exagDir + exagRange) {
-				p.setRad (p.getRad() - p.getRad () * rand.NextDouble() * maxVariation);
-			} else {
-				double amnt;
-				if (theta < exagDir) {
-					amnt = (theta - (exagDir - exagRange)) / exagRange;
+		if (GameObject.Find ("Main Camera").GetComponent<SkyColouring> ().ready) {
+			System.Random rand = new System.Random ();
+			if (updateCount++ > updateLim) {
+				updateCount = rand.Next (updateLim - updateLim / 10);
+				setExagDir ();
+			}
+			for (int i = 0; i < points.Count; i++) {
+				Point p = points [i];
+				double theta = p.getTheta ();
+				if (theta < exagDir - exagRange || theta > exagDir + exagRange) {
+					p.setRad (p.getRad () - p.getRad () * rand.NextDouble () * maxVariation);
 				} else {
-					amnt = ((exagDir + exagRange) - theta) / exagRange;
+					double amnt;
+					if (theta < exagDir) {
+						amnt = (theta - (exagDir - exagRange)) / exagRange;
+					} else {
+						amnt = ((exagDir + exagRange) - theta) / exagRange;
+					}
+					p.setRad (p.getRad () - p.getRad () * rand.NextDouble () * exagAmnt * amnt);
 				}
-				p.setRad (p.getRad() - p.getRad () * rand.NextDouble () * exagAmnt * amnt);
+
+
+				//Wiggles
+				double wiggleAmnt = wiggle * rand.NextDouble ();
+				if (System.Math.Abs (p.getDrawOffset ()) + p.getRad () > p.getRad () + p.getRad () * wiggleLim) {
+					p.setWiggleCount (0);
+					if (p.getDrawOffset () > 0) {
+						p.setDrawOffset (p.getDrawOffset () - p.getRad () * wiggleAmnt);
+					} else {
+						p.setDrawOffset (p.getDrawOffset () + p.getRad () * wiggleAmnt);
+					}
+					p.setWiggleOutwards (!p.isWiggleOutwards ());
+				} else {
+					if (p.isWiggleOutwards ()) {
+						p.setDrawOffset (p.getDrawOffset () + p.getRad () * wiggleAmnt);
+					} else {
+						p.setDrawOffset (p.getDrawOffset () - p.getRad () * wiggleAmnt);
+					}
+				}
+				p.setWiggleCount (p.getWiggleCount () + 1);
+				if (p.getWiggleCount () > maxWiggles) {
+					p.setWiggleOutwards (!p.isWiggleOutwards ());
+					p.setWiggleCount (rand.Next (maxWiggles - 5));
+				}
 			}
 
+			Mesh m = GetComponent<MeshFilter> ().mesh;
+			Vector3[] v3 = m.vertices;
+			//Update the mesh
 
-			//Wiggles
-			double wiggleAmnt = wiggle * rand.NextDouble();
-			if (System.Math.Abs(p.getDrawOffset())+p.getRad() > p.getRad() + p.getRad() * wiggleLim) {
-				p.setWiggleCount(0);
-				if (p.getDrawOffset() > 0) {
-					p.setDrawOffset(p.getDrawOffset() - p.getRad () * wiggleAmnt);
-				} else {
-					p.setDrawOffset(p.getDrawOffset() + p.getRad() * wiggleAmnt);
-				}
-				p.setWiggleOutwards(!p.isWiggleOutwards());
-			} else {
-				if (p.isWiggleOutwards()) {
-					p.setDrawOffset(p.getDrawOffset() + p.getRad() * wiggleAmnt);
-				} else {
-					p.setDrawOffset(p.getDrawOffset() - p.getRad() * wiggleAmnt);
-				}
+			Vector2[] vertices = new Vector2[v3.Length];
+			int j = 0;
+			for (; j < points.Count; j++) {
+				Point p = points [j];
+				double x = centre - Math.Cos (p.getTheta ()) * (p.getRad () + p.getDrawOffset ());
+				double y = -Camera.main.orthographicSize + (Math.Sin (p.getTheta ()) * (p.getRad () + p.getDrawOffset ()));
+				vertices [j] = new Vector2 ((float)x, (float)y);
 			}
-			p.setWiggleCount(p.getWiggleCount() + 1);
-			if (p.getWiggleCount() > maxWiggles) {
-				p.setWiggleOutwards(!p.isWiggleOutwards());
-				p.setWiggleCount(rand.Next (maxWiggles - 5));
-			}
-		}
-
-		Mesh m = GetComponent<MeshFilter> ().mesh;
-		Vector3[] v3 = m.vertices;
-		//Update the mesh
-
-		Vector2[] vertices = new Vector2[v3.Length];
-		int j = 0;
-		for (; j < points.Count; j++) {
-			Point p = points[j];
-			double x = centre - Math.Cos (p.getTheta()) * (p.getRad () + p.getDrawOffset());
-			double y = -Camera.main.orthographicSize + (Math.Sin (p.getTheta()) * (p.getRad() + p.getDrawOffset()));
-			vertices[j] = new Vector2((float) x, (float) y);
-		}
-		vertices [j++] = new Vector2 ((float)+ size,(float) -size);
-		vertices [j++] = new Vector2 ((float)size, (float)size);
-		vertices [j++] = new Vector2 ((float)- size, (float)size);
-		vertices [j++] = new Vector2 ((float)- size, (float)- size);
+			vertices [j++] = new Vector2 ((float)+ size, (float)-size);
+			vertices [j++] = new Vector2 ((float)size, (float)size);
+			vertices [j++] = new Vector2 ((float)- size, (float)size);
+			vertices [j++] = new Vector2 ((float)- size, (float)- size);
 		
-		Triangulator t = new Triangulator(vertices);
-		int[] indices = t.Triangulate ();
-		for (int i = 0; i < v3.Length; i++) {
-			v3[i] = new Vector3(vertices[i].x, vertices[i].y, 0);
-		}
+			Triangulator t = new Triangulator (vertices);
+			int[] indices = t.Triangulate ();
+			for (int i = 0; i < v3.Length; i++) {
+				v3 [i] = new Vector3 (vertices [i].x, vertices [i].y, 0);
+			}
 
-		m.vertices = v3;
-		m.triangles = indices;
-		m.RecalculateNormals ();
-		m.RecalculateBounds ();
+			m.vertices = v3;
+			m.triangles = indices;
+			m.RecalculateNormals ();
+			m.RecalculateBounds ();
+		}
 	}
 
 }

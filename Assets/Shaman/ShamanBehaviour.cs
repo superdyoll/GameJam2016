@@ -10,6 +10,7 @@ public class ShamanBehaviour : MonoBehaviour {
 	private string desireString = null;
 	public ShamanBehaviour otherShaman;
 	public Sprite currentDesire = null;
+	private GameObject desireObject;
 	private int energy = 5;
 	private float energyCooldown = 0;
 
@@ -19,6 +20,7 @@ public class ShamanBehaviour : MonoBehaviour {
 		originalY = transform.position.y;
 		thisy = Random.Range (0.0f, 1.0f);
 		ySpeed = Random.Range (2, 5);
+		desireObject = transform.Find ("Desire").gameObject;
 	}
 
 	public int getCurrentEnergy(){
@@ -26,35 +28,43 @@ public class ShamanBehaviour : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		transform.Find ("Energy Bar").GetComponent<SpriteRenderer> ().sprite = energyBars [energy];
-		if (energyCooldown <= 0) {
-			if(energy == 0){
-				energy = 5;
-			}
-			lastInspirationRequest += Time.deltaTime;
-			if (inspirationTimer == 0) {
-				inspirationTimer = Random.Range (7, 14);
-			} else if (inspirationTimer < lastInspirationRequest) {
-				if (currentDesire != null) {
-					--energy;
-					if (energy <= 0) {
-						energy = 0;
-						energyCooldown = 10;
-					}
+		if (GameObject.Find ("Main Camera").GetComponent<SkyColouring> ().ready) {
+			transform.Find ("Energy Bar").GetComponent<SpriteRenderer> ().sprite = energyBars [energy];
+			if (energyCooldown <= 0) {
+				if (energy == 0) {
+					energy = 5;
+					desireObject.transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
 					setDesire (null);
-					desireString = null;
-				} else {	
-					requestInspiration ();
 				}
-				lastInspirationRequest = 0;
-				inspirationTimer = Random.Range(5, 10);
+				lastInspirationRequest += Time.deltaTime;
+				if (inspirationTimer == 0) {
+					inspirationTimer = Random.Range (1, 1);
+				} else if (inspirationTimer < lastInspirationRequest) {
+					if (currentDesire != null) {
+						--energy;
+						if (energy <= 0) {
+							energy = 0;
+							energyCooldown = 10;
+							setDesire (desires [4]);
+						} else {
+							setDesire (null);
+						}
+						desireString = null;
+					} else {	
+						requestInspiration ();
+					}
+					lastInspirationRequest = 0;
+					inspirationTimer = Random.Range (1, 1);
+				}
+			} else {
+				Vector3 rot = desireObject.transform.rotation.eulerAngles;
+				rot = new Vector3 (rot.x, rot.y, rot.z - 5);
+				desireObject.transform.rotation = Quaternion.Euler (rot);
+				energyCooldown -= Time.deltaTime;
 			}
-
-		} else {
-			energyCooldown -= Time.deltaTime;
+			checkInput ();
+			wiggle ();
 		}
-		checkInput ();
-		wiggle ();
 	}
 
 	private void setDesire(Sprite desire){
@@ -63,17 +73,18 @@ public class ShamanBehaviour : MonoBehaviour {
 	}
 
 	private void checkInput(){
-		foreach (char c in Input.inputString) {
-			Debug.Log (Input.inputString + "/" + desireString[positionInString]);
-			if(c == desireString[positionInString]){
-				++positionInString;
-				if(positionInString == desireString.Length){
-					setDesire(null);
+		if (desireString != null) {
+			foreach (char c in Input.inputString) {
+				if (c == desireString [positionInString]) {
+					++positionInString;
+					if (positionInString == desireString.Length) {
+						setDesire (null);
+						positionInString = 0;
+						break;
+					}
+				} else {
 					positionInString = 0;
-					break;
 				}
-			} else {
-				positionInString = 0;
 			}
 		}
 	}
@@ -88,6 +99,7 @@ public class ShamanBehaviour : MonoBehaviour {
 	private void requestInspiration(){
 		List<Sprite> possibleDesires = new List<Sprite> ();
 		possibleDesires.AddRange (desires);
+		possibleDesires.RemoveAt (4);
 		if (otherShaman.currentDesire != null) {
 			possibleDesires.Remove(otherShaman.currentDesire);
 		}
