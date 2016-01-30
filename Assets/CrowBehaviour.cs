@@ -57,8 +57,9 @@ public class CrowBehaviour : MonoBehaviour {
 
 		checkDarkCollide ();
 		
+		//Debug.Log (obedience);
 		if (!moving && !selected && obedience < 5) {
-			Debug.Log("I'm going to wobble");
+			//Debug.Log("I'm going to wobble");
 			target = getRandomPoint((Vector2)transform.position, obedienceToDistance());
 		}
 	}
