@@ -4,10 +4,12 @@ using System.Collections;
 public class CrowBehaviour : MonoBehaviour {
 
 	private bool selected;
+	private bool moving;
 	public Animator animation;
 	private Vector2 target;
-	private float speed;
-	public float levelSpeed;
+	public float maxSpeed;
+	public int obedience;
+	public bool facingLeft;
 
 	// Use this for initialization
 	void Start () {
@@ -16,19 +18,37 @@ public class CrowBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if ((Vector2) transform.position != target) {
-			float step = speed * Time.deltaTime;
+
+		float move = transform.position.x - target.x;
+	
+		if ((Vector2)transform.position != target) {
+			float step = getCurrentSpeed () * Time.deltaTime;
 			transform.position = Vector2.MoveTowards (transform.position, target, step);
+		} else {
+			moving = false;
 		}
 
+		// Select bird on Left Click
 		if (Input.GetMouseButtonDown(0)) {
 			//Debug.Log("Pressed left click, casting ray.");
 			CastSelectRay();
 		}
-		if (Input.GetMouseButtonDown (1)) {
-			if (selected){
-				CastMoveRay();
-			}
+
+		// Move bird if selected
+		if (Input.GetMouseButtonDown (1) && selected) {
+			CastMoveRay();
+		}
+
+		//Face the bird right
+		if (move < 0) {
+			facingLeft = false;
+			transform.localRotation = Quaternion.Euler (0, 180, 0);
+		}
+
+		//Face the bird left
+		if (move > 0){
+			facingLeft = true;
+			transform.localRotation = Quaternion.Euler (0, 0, 0);
 		}
 	}
 
@@ -38,21 +58,31 @@ public class CrowBehaviour : MonoBehaviour {
 		if (hit) {
 			animation.speed = 0;
 			selected = true;
-			speed =0;
+			moving = false;
 		} else {
 			animation.speed = 1;
-			speed = levelSpeed;
 			selected = false;
 		}
 	}
 
 	void CastMoveRay(){
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit2D hit = Physics2D.Raycast (ray.origin, ray.direction, Mathf.Infinity);
 		target = ray.origin;
 		animation.speed = 1;
-		speed = levelSpeed;
-		Debug.Log ("Crow selected now moving to " + target);
+		moving = true;
+		//Debug.Log ("Crow selected now moving to " + target);
+	}
+
+	float getCurrentSpeed(){
+		if (moving) {
+			if (obedience < maxSpeed) {
+				return obedience + 1;
+			} else {
+				return maxSpeed;
+			}
+		} else {
+			return 0;
+		}
 	}
 
 }
