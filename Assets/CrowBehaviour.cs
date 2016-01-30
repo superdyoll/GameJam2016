@@ -8,13 +8,13 @@ public class CrowBehaviour : MonoBehaviour {
 	private bool moving;
 	public Animator animation;
 	private Vector2 target;
-	public float maxSpeed;
+	private float maxSpeed;
 	public int obedience;
 	public bool facingLeft;
 
 	// Use this for initialization
 	void Start () {
-	
+		maxSpeed = 5;
 	}
 	
 	// Update is called once per frame
@@ -96,9 +96,7 @@ public class CrowBehaviour : MonoBehaviour {
 		if (furthestDistance > 0) {
 			double t = 2 * Math.PI * rand.NextDouble();
 			double u = 0;
-			Debug.Log("Furthest Distance " + furthestDistance);
 			for (int i = furthestDistance; i > 0; i--) {
-				Debug.Log("I'm adding a thing");
 				u = u + rand.NextDouble();
 			}
 			double r = u;
@@ -107,8 +105,8 @@ public class CrowBehaviour : MonoBehaviour {
 			}
 			double xAdjust = r * Math.Cos (t);
 			double yAdjust = r * Math.Sin (t);
-			Debug.Log("t = " + t + " u = " + u + " r = " + r);
-			Debug.Log("xAdjust = " + xAdjust + " yAdjust = " + yAdjust);
+			//Debug.Log("t = " + t + " u = " + u + " r = " + r);
+			//Debug.Log("xAdjust = " + xAdjust + " yAdjust = " + yAdjust);
 			center.x = center.x + (float) xAdjust;
 			center.y = center.y + (float) yAdjust;
 			return center;
