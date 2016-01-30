@@ -5,7 +5,7 @@ public class SunBehaviour : MonoBehaviour {
 	private float yOrigin = -5, maxY = 2;
 	private float percentageRisen = 0, maxRiseRate = 0.2f, currentRiseRate = 0;
 	private Shadow shadowScript;
-	public GameObject gameOver;
+	public GameObject gameOver, gameWin;
 	// Use this for initialization
 	void Start () {
 		shadowScript = GameObject.Find ("Shadow").GetComponent<Shadow> ();
@@ -26,6 +26,8 @@ public class SunBehaviour : MonoBehaviour {
 			percentageRisen += currentRiseRate;
 			if (percentageRisen >= 100) {
 				percentageRisen = 100f;
+				gameWin.SetActive (true);
+				Time.timeScale = 0;
 			} else if (percentageRisen <= 0f) {
 				percentageRisen = 0f;
 				gameOver.SetActive (true);

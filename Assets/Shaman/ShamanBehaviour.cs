@@ -38,7 +38,7 @@ public class ShamanBehaviour : MonoBehaviour {
 				}
 				lastInspirationRequest += Time.deltaTime;
 				if (inspirationTimer == 0) {
-					inspirationTimer = Random.Range (1, 1);
+					inspirationTimer = Random.Range (5, 10);
 				} else if (inspirationTimer < lastInspirationRequest) {
 					if (currentDesire != null) {
 						--energy;
@@ -54,7 +54,7 @@ public class ShamanBehaviour : MonoBehaviour {
 						requestInspiration ();
 					}
 					lastInspirationRequest = 0;
-					inspirationTimer = Random.Range (1, 1);
+					inspirationTimer = Random.Range (5, 10);
 				}
 			} else {
 				Vector3 rot = desireObject.transform.rotation.eulerAngles;
