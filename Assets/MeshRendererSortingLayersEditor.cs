@@ -5,7 +5,6 @@ using System.Collections;
 [CustomEditor(typeof(MeshRenderer))]
 public class MeshRendererSortingLayersEditor : Editor
 {
-	
 	public override void OnInspectorGUI()
 	{
 		base.OnInspectorGUI();

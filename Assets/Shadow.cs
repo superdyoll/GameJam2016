@@ -60,7 +60,6 @@ public class Shadow : MonoBehaviour {
 		double lim = System.Math.Max (size, size) / 2;
 		double increment = Math.PI / (numPoints - 1);
 		for (int i = 0; i < numPoints; i++) {
-			Debug.Log("Angle: " + increment * i + " Radius: "+  lim);
 			points.Add (new Point (increment * i, lim));
 		}
 	}
@@ -88,6 +87,16 @@ public class Shadow : MonoBehaviour {
 	void setExagDir() {
 		System.Random rand = new System.Random();
 		exagDir = rand.NextDouble () * Math.PI;
+	}
+
+	public float getBlackAverage(){
+		float totalRadius = 0;
+		for(int i = 0; i < points.Count; ++i){
+			totalRadius += (float)points[i].getRad();
+		}
+		totalRadius = totalRadius / points.Count;
+		float maxRad = (float)size / 1.35f;
+		return 100f / maxRad * totalRadius;
 	}
 
 	// Update is called once per frame
