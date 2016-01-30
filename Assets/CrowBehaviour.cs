@@ -7,7 +7,7 @@ public class CrowBehaviour : MonoBehaviour {
 
 	private bool selected;
 	private bool moving;
-	public Animator animation;
+	public Animator crowAnimation;
 	private Vector2 target;
 	private float maxSpeed;
 	public int obedience;
@@ -16,11 +16,12 @@ public class CrowBehaviour : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		maxSpeed = 3;
-		moving = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		Debug.Log ("Selected = " + selected + "Moving = " + moving);
 
 		// Select bird on Left Click
 		if (Input.GetMouseButtonDown(0)) {
@@ -31,9 +32,6 @@ public class CrowBehaviour : MonoBehaviour {
 		if (Input.GetMouseButtonDown (1) && selected) {
 			CastMoveRay();
 		}
-
-		// See if object colliding with dark matter
-		//checkDarkCollide ();
 
 		// Move bird towards target
 		if ((Vector2)transform.position != target && moving) {
@@ -76,37 +74,22 @@ public class CrowBehaviour : MonoBehaviour {
 		RaycastHit2D hit = Physics2D.Raycast (ray.origin, ray.direction, Mathf.Infinity);
 		if (hit.collider == this.GetComponent<BoxCollider2D>()) {
 			//Debug.Log("Bird Selected");
-			animation.speed = 0;
+			crowAnimation.speed = 0;
 			selected = true;
 			moving = false;
 		} else {
-			animation.speed = 1;
+			crowAnimation.speed = 1;
 			selected = false;
 			moving = true;
-		}
-	}
-
-	void checkDarkCollide() {
-		CircleCollider2D collider = this.GetComponent<CircleCollider2D> ();
-		Shadow shadow = GameObject.Find ("Shadow").GetComponent<Shadow> ();
-		List<Point> points = shadow.getPoints();
-		for (int i = 0; i < points.Count; i++) {
-			Point p = points[i];
-			double end = p.getRad () * 100;
-
-			double top;
-			double bottom;
-			bool check;
-
 		}
 	}
 
 	void CastMoveRay(){
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		target = getRandomPoint(ray.origin, obedienceToDistance());
-		animation.speed = 1;
+		crowAnimation.speed = 1;
 		moving = true;
-		//Debug.Log ("Crow selected now moving to " + target);
+		Debug.Log ("Crow selected now moving to " + target);
 	}
 
 	float getCurrentSpeed(){
