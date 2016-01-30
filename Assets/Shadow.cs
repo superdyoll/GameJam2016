@@ -4,15 +4,14 @@ using System;
 
 public class Shadow : MonoBehaviour {
 
-	private double shadowWidth = 40;
-	private double shadowHeight = 40;
+	private double size;
 	private double centre;
 
-	private int numPoints = 100;
+	private int numPoints = 50;
 	private double delay = 1000/60;
 	private double maxVariation;
-	private double wiggle = 0.05d;
-	private double wiggleLim = 0.1d;
+	private double wiggle = 0.002d;
+	private double wiggleLim = 0.05d;
 
 	private int updateCount = 0;
 	private int numSegments = 20;
@@ -26,13 +25,18 @@ public class Shadow : MonoBehaviour {
 	private int maxWiggles = 30;
 
 	void meshInit() {
-		Vector2[] vertices = new Vector2[points.Count];
-		for (int i = 0; i < points.Count; i++) {
-			Point p = points[i];
+		Vector2[] vertices = new Vector2[points.Count + 4];
+		int j = 0;
+		for (; j < points.Count; j++) {
+			Point p = points[j];
 			double x = centre - Math.Cos (p.getTheta()) * p.getRad();
-			double y = shadowHeight - Math.Sin (p.getTheta()) * p.getRad();
-			vertices[i] = new Vector2((float)x,(float) y);
+			double y = -Camera.main.orthographicSize - (Math.Sin (p.getTheta()) * p.getRad());
+			vertices[j] = new Vector2((float)x,(float) y);
 		}
+		vertices [j++] = new Vector2 ((float)+ size,(float) -size);
+		vertices [j++] = new Vector2 ((float)size, (float)size);
+		vertices [j++] = new Vector2 ((float)- size, (float)size);
+		vertices [j++] = new Vector2 ((float)- size, (float)- size);
 
 		Triangulator t = new Triangulator (vertices);
 		int[] indices = t.Triangulate ();
@@ -46,28 +50,42 @@ public class Shadow : MonoBehaviour {
 		m.triangles = indices;
 		m.RecalculateNormals ();
 		m.RecalculateBounds ();
+
+		
 		//Add to stuff
 		this.GetComponent<MeshFilter> ().mesh = m;
+	}
+
+	void pointsInit() {
+		double lim = System.Math.Max (size, size) / 2;
+		double increment = Math.PI / (numPoints - 1);
+		for (int i = 0; i < numPoints; i++) {
+			Debug.Log("Angle: " + increment * i + " Radius: "+  lim);
+			points.Add (new Point (increment * i, lim));
+		}
 	}
 
 	// Use this for initialization
 	void Start () {
 		maxVariation = 0.02d / delay;
-		centre = shadowWidth / 2;
+		GetComponent<Renderer> ().material.shader = Shader.Find ("Transparent/Diffuse");
+		GetComponent<Renderer> ().material.color = new Color (0.1f, 0.1f, 0.1f, 1f);
 
-		double lim = Camera.main.orthographicSize;
-		double increment = Math.PI / (numPoints - 1);
-		for (int i = 0; i < numPoints; i++) {
-			points.Add(new Point(increment * i, lim));
-		}
+		Camera cam = Camera.main;
+		float height = 2f * cam.orthographicSize;
+		float width = height * cam.aspect;
+		size = Math.Max (width, height);
 
+		centre = 0;
+
+		pointsInit ();
 		setExagDir ();
 		meshInit ();
 	}
 
 	void setExagDir() {
 		System.Random rand = new System.Random();
-		exagDir = rand.Next(numSegments) * Math.PI / numSegments;
+		exagDir = rand.NextDouble () * Math.PI;
 	}
 
 	// Update is called once per frame
@@ -122,12 +140,17 @@ public class Shadow : MonoBehaviour {
 		//Update the mesh
 
 		Vector2[] vertices = new Vector2[v3.Length];
-		for (int i = 0; i < points.Count; i++) {
-			Point p = points[i];
-			double x = centre - Math.Cos (p.getTheta()) * p.getRad ();
-			double y = shadowHeight - Math.Sin (p.getTheta()) * p.getRad();
-			vertices[i] = new Vector2((float) x, (float) y);
+		int j = 0;
+		for (; j < points.Count; j++) {
+			Point p = points[j];
+			double x = centre - Math.Cos (p.getTheta()) * (p.getRad () + p.getDrawOffset());
+			double y = -Camera.main.orthographicSize + (Math.Sin (p.getTheta()) * (p.getRad() + p.getDrawOffset()));
+			vertices[j] = new Vector2((float) x, (float) y);
 		}
+		vertices [j++] = new Vector2 ((float)+ size,(float) -size);
+		vertices [j++] = new Vector2 ((float)size, (float)size);
+		vertices [j++] = new Vector2 ((float)- size, (float)size);
+		vertices [j++] = new Vector2 ((float)- size, (float)- size);
 		
 		Triangulator t = new Triangulator(vertices);
 		int[] indices = t.Triangulate ();
