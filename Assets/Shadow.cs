@@ -57,6 +57,10 @@ public class Shadow : MonoBehaviour {
 		this.GetComponent<MeshFilter> ().mesh = m;
 	}
 
+	void OnCollisionEnter(Collision collision) {
+
+	}
+
 	public List<Point> getPoints() {
 		return points;
 	}
