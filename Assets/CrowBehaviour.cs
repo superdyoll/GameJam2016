@@ -8,10 +8,10 @@ public class CrowBehaviour : MonoBehaviour {
 
 	public Animator crowAnimation;
 	public int obedience;
-
+	public ShamanBehaviour shaman;
 	private bool facingLeft;
 	private bool selected;
-	private bool moving;
+	private bool moving = false;
 	private Vector2 target;
 	private float maxSpeed;
 	private System.Random rand;
@@ -60,25 +60,33 @@ public class CrowBehaviour : MonoBehaviour {
 			transform.localRotation = Quaternion.Euler (0, 0, 0);
 		}
 	}
-	
-	void moveBird (){
-		if ((Vector2)transform.position != target) {
-			if (!moving) {
-				target = getRandomPoint ((Vector2)transform.position, obedienceToDistance ());
-			}
 
-			float step = getCurrentSpeed () * Time.deltaTime;
-			transform.position = Vector2.MoveTowards (transform.position, target, step);
-		} else {
-			moving = false;
+	private bool isCloseToTarget(){
+		if (Math.Abs (transform.position.x - target.x) < 0.01f) {
+			if(Math.Abs(transform.position.y - target.y) < 0.01f){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void moveBird (){
+		if (target == null || isCloseToTarget()) {
+			target = getRandomPoint ((Vector2)transform.position, obedienceToDistance ());
+		} else if (moving) {
+			if (isCloseToTarget()){
+				target = getRandomPoint ((Vector2)transform.position, obedienceToDistance ());
+			} else {
+				float step = getCurrentSpeed () * Time.deltaTime;
+				transform.position = Vector2.MoveTowards (transform.position, target, step);
+			}
 		}
 	}
 	
 	void CastSelectRay() {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit2D hit = Physics2D.Raycast (ray.origin, ray.direction, Mathf.Infinity);
-		if (hit.collider == this.GetComponent<BoxCollider2D>()) {
-			//Debug.Log("Bird Selected");
+		if (hit.collider.gameObject == this.gameObject) {
 			crowAnimation.speed = 0;
 			selected = true;
 			moving = false;
@@ -89,36 +97,52 @@ public class CrowBehaviour : MonoBehaviour {
 		}
 	}
 
+	void CastMoveRay(){
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		target = getRandomPoint(ray.origin, obedienceToDistance());
+		crowAnimation.speed = 1;
+		moving = true;
+		//Debug.Log ("Crow selected now moving to " + target);
+	}
+
+	private bool checkCollidesPoint(Vector2 point, List<Point> points, CircleCollider2D collider){
+		for (int i = 0; i < points.Count; i++) {
+			Point p = points [i];
+			double end = p.getRad () * 100;
+			
+			double p1x = p.getX ();
+			double p1y = p.getY ();
+			
+			double p2x = -Math.Cos (p.getTheta ()) * end;
+			double p2y = -Camera.main.orthographicSize + (Math.Sin (p.getTheta ()) * end);
+			
+			
+			double cx = point.x;
+			double cy = point.y;
+			if (intersects ((float)cx, (float)cy, (float)collider.radius, (float)p1x, (float)p1y, (float)p2x, (float)p2y)) {
+				p.setRad (p.getRad () + p.getRad () * 0.1d);
+				return true;
+			}
+			//Instantiate(sun, new Vector3((float)px,(float)p2y, 0), Quaternion.identity );
+			//intersection((float)cx,(float) cy, (float)collider.radius,(float) p1x,(float) p1y,(float) p2x,(float) p2y);
+		}
+		return false;
+	}
+
 	void checkDarkCollide() {
 		CircleCollider2D collider = GetComponent<CircleCollider2D> ();
 		Shadow shadow = GameObject.Find ("Shadow").GetComponent<Shadow> ();
 		List<Point> points = shadow.getPoints();
 		List<Vector2> boxCheckSquarePoints = new List<Vector2> ();
-		boxCheckSquarePoints.Add (new Vector2 (transform.position.x + 2, transform.position.y + 2));
-		boxCheckSquarePoints.Add (new Vector2 (transform.position.x - 2, transform.position.y + 2));
-		boxCheckSquarePoints.Add (new Vector2 (transform.position.x + 2, transform.position.y - 2));
-		boxCheckSquarePoints.Add (new Vector2 (transform.position.x - 2, transform.position.y - 2));
-
+		boxCheckSquarePoints.Add (new Vector2 (transform.position.x + 1, transform.position.y + 1));
+		boxCheckSquarePoints.Add (new Vector2 (transform.position.x - 1, transform.position.y + 1));
+		boxCheckSquarePoints.Add (new Vector2 (transform.position.x + 1, transform.position.y - 1));
+		boxCheckSquarePoints.Add (new Vector2 (transform.position.x - 1, transform.position.y - 1));
 		for (int j = 0; j < 4; j++) {
-			for (int i = 0; i < points.Count; i++) {
-				Point p = points [i];
-				double end = p.getRad () * 100;
-
-				double p1x = p.getX ();
-				double p1y = p.getY ();
-
-				double p2x = -Math.Cos (p.getTheta ()) * end;
-				double p2y = -Camera.main.orthographicSize + (Math.Sin (p.getTheta ()) * end);
-
-
-				double cx = boxCheckSquarePoints[j].x;
-				double cy = boxCheckSquarePoints[j].y;
-				if (intersects ((float)cx, (float)cy, (float)collider.radius, (float)p1x, (float)p1y, (float)p2x, (float)p2y)) {
-					p.setRad (p.getRad () + p.getRad () * 0.1d);
-				}
-				//Instantiate(sun, new Vector3((float)px,(float)p2y, 0), Quaternion.identity );
-				//intersection((float)cx,(float) cy, (float)collider.radius,(float) p1x,(float) p1y,(float) p2x,(float) p2y);
-			}
+			checkCollidesPoint(boxCheckSquarePoints[j], points, collider);
+		}
+		if (checkCollidesPoint((Vector2)transform.position, points, collider) || !shadow.isInScreen((Vector2)transform.position)) {
+			target = getRandomPoint(new Vector2(0, -3), 2);
 		}
 	}
 
@@ -165,14 +189,6 @@ public class CrowBehaviour : MonoBehaviour {
 		}
 	}
 
-	void CastMoveRay(){
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		target = getRandomPoint(ray.origin, obedienceToDistance());
-		crowAnimation.speed = 1;
-		moving = true;
-		Debug.Log ("Crow selected now moving to " + target);
-	}
-	
 	float getCurrentSpeed(){
 		if (moving) {
 			if (obedience < maxSpeed) {
@@ -186,7 +202,7 @@ public class CrowBehaviour : MonoBehaviour {
 	}
 	
 	int obedienceToDistance(){
-		return 5 - obedience;
+		return 10 - shaman.getCurrentEnergy() * 2;
 	}
 	
 	Vector2 getRandomPoint(Vector2 center,int furthestDistance){
