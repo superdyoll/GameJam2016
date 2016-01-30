@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+=======
+﻿/*using UnityEngine;
+using System.Collections;
+>>>>>>> 46639bf7d38986e5b8516d0fd914601e6f51e5f8
 
 public class Shadow : MonoBehaviour {
 
@@ -198,7 +203,11 @@ public class Shadow : MonoBehaviour {
 		}
 	
 	}
+<<<<<<< HEAD
 
 }
 
 
+=======
+}*/
+>>>>>>> 46639bf7d38986e5b8516d0fd914601e6f51e5f8
