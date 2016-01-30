@@ -74,8 +74,8 @@ public class Shadow : MonoBehaviour {
 	}
 
 	public bool isInScreen(Vector2 v) {
-		float height_2 = Camera.main.orthographicSize;
-		float width = height_2 * Camera.main.aspect;
+		float height = Camera.main.orthographicSize;
+		float width = height * Camera.main.aspect;
 		float x = v.x;
 		float y = v.y;
 		if (x > -width && x < width) {
