@@ -12,8 +12,10 @@ public class SkyScroll : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		percentageRisen = sun.getPercentageRisen ();
-		float yPosition = 20f / 100f * percentageRisen;
-		transform.position = new Vector3 (transform.position.x, yOrigin - yPosition, 0);
+		if (GameObject.Find ("Main Camera").GetComponent<SkyColouring> ().ready) {
+			percentageRisen = sun.getPercentageRisen ();
+			float yPosition = 20f / 100f * percentageRisen;
+			transform.position = new Vector3 (transform.position.x, yOrigin - yPosition, 0);
+		}
 	}
 }
