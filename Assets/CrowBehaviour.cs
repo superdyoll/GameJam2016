@@ -15,8 +15,10 @@ public class CrowBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//float step = speed * Time.deltaTime;
-		//transform.position = Vector2.MoveTowards(transform.position, target.position, step);
+		if (target != null) {
+			float step = speed * Time.deltaTime;
+			transform.position = Vector2.MoveTowards (transform.position, target.position, step);
+		}
 
 		if (Input.GetMouseButtonDown(0)) {
 			//Debug.Log("Pressed left click, casting ray.");
@@ -24,7 +26,7 @@ public class CrowBehaviour : MonoBehaviour {
 		}
 		if (Input.GetMouseButtonDown (1)) {
 			if (selected){
-				//CastMoveRay();
+				CastMoveRay();
 			}
 		}
 	}
@@ -41,11 +43,11 @@ public class CrowBehaviour : MonoBehaviour {
 		}
 	}
 
-	/*void CastMoveRay(){
+	void CastMoveRay(){
 		Debug.Log ("Crow selected now moving");
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit2D hit = Physics2D.Raycast (ray.origin, ray.direction, Mathf.Infinity);
-		target = hit.point;
-	}*/
+		target.position = hit.point;
+	}
 
 }
