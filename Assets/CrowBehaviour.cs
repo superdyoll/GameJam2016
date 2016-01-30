@@ -36,6 +36,8 @@ public class CrowBehaviour : MonoBehaviour {
 				CastMoveRay ();
 			}
 
+			checkDarkCollide();
+
 			moveBird();
 
 			adjustDirection();
