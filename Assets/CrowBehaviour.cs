@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class CrowBehaviour : MonoBehaviour {
@@ -67,7 +68,7 @@ public class CrowBehaviour : MonoBehaviour {
 
 	void CastMoveRay(){
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		target = ray.origin;
+		target = getRandomPoint(ray.origin);
 		animation.speed = 1;
 		moving = true;
 		//Debug.Log ("Crow selected now moving to " + target);
@@ -82,6 +83,49 @@ public class CrowBehaviour : MonoBehaviour {
 			}
 		} else {
 			return 0;
+		}
+	}
+
+	int obedienceToDistance(){
+		switch (obedience) {
+		case 0:
+			return 5;
+		case 1:
+			return 4;
+		case 2: 
+			return 3;
+		case 3: 
+			return 2;
+		case 4:
+			return 1;
+		case 5:
+			return 0;
+		}
+		return 0;
+	}
+
+    Vector2 getRandomPoint(Vector2 center){
+		System.Random rand = new System.Random ();
+		int furthestDistance = obedienceToDistance();
+		if (furthestDistance > 0) {
+			double t = 2 * Math.PI * rand.NextDouble ();
+			double u = 0;
+			for (int x = furthestDistance; x == 0; x--) {
+				u += rand.NextDouble ();
+			}
+			double r = u;
+			if (u > furthestDistance) {
+				r = 2 - u;
+			}
+			double xAdjust = r * Math.Cos (t);
+			double yAdjust = r * Math.Sin (t);
+			Debug.Log("t = " + t + " u = " + u + "r = " + r);
+			Debug.Log("xAdjust = " + xAdjust + " yAdjust = " + yAdjust);
+			center.x = center.x + (float) xAdjust;
+			center.y = center.y + (float) yAdjust;
+			return center;
+		} else {
+			return center;
 		}
 	}
 
