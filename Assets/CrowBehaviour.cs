@@ -20,53 +20,47 @@ public class CrowBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (GameObject.Find ("Main Camera").GetComponent<SkyColouring> ().ready) {
+			float move = transform.position.x - target.x;
+	
+			if ((Vector2)transform.position != target) {
+				moving = true;
+				float step = getCurrentSpeed () * Time.deltaTime;
+				transform.position = Vector2.MoveTowards (transform.position, target, step);
+			} else {
+				moving = false;
+			}
 
-		Debug.Log ("Selected = " + selected + "Moving = " + moving);
 
-		// Select bird on Left Click
-		if (Input.GetMouseButtonDown(0)) {
-			CastSelectRay();
-		}
+			// Select bird on Left Click
+			if (Input.GetMouseButtonDown (0)) {
+				//Debug.Log("Pressed left click, casting ray.");
+				CastSelectRay ();
+			}
+
+			// Move bird if selected
+			if (Input.GetMouseButtonDown (1) && selected) {
+				CastMoveRay ();
+			}
+
+			//Face the bird right
+			if (move < 0) {
+				facingLeft = false;
+				transform.localRotation = Quaternion.Euler (0, 180, 0);
+			}
+
+			//Face the bird left
+			if (move > 0) {
+				facingLeft = true;
+				transform.localRotation = Quaternion.Euler (0, 0, 0);
+			}
 		
-		// Move bird if selected
-		if (Input.GetMouseButtonDown (1) && selected) {
-			CastMoveRay();
+			//Debug.Log (obedience);
+			if (!moving && !selected && obedience < 5) {
+				//Debug.Log("I'm going to wobble");
+				target = getRandomPoint ((Vector2)transform.position, obedienceToDistance ());
+			}
 		}
-
-		// Move bird towards target
-		if ((Vector2)transform.position != target && moving) {
-			moveBird();
-		}
-
-		adjustDirection ();
-
-		// Wobble
-		/*if (!moving && !selected) {
-			target = getRandomPoint((Vector2)transform.position, obedienceToDistance());
-			moving = true;
-		}*/
-	}
-
-	void adjustDirection(){
-		//Get direction that bird is moving
-		float move = transform.position.x - target.x;
-		
-		//Face the bird right
-		if (move < 0) {
-			facingLeft = false;
-			transform.localRotation = Quaternion.Euler (0, 180, 0);
-		}
-		
-		//Face the bird left
-		if (move > 0) {
-			facingLeft = true;
-			transform.localRotation = Quaternion.Euler (0, 0, 0);
-		}
-	}
-
-	void moveBird (){
-		float step = getCurrentSpeed () * Time.deltaTime;
-		transform.position = Vector2.MoveTowards (transform.position, target, step);
 	}
 
 	void CastSelectRay() {
