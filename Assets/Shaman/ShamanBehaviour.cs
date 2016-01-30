@@ -6,6 +6,7 @@ public class ShamanBehaviour : MonoBehaviour {
 	private int inspirationTimer, positionInString = 0;
 	private float originalX, originalY, thisx = 0, thisy, ySpeed;
 	public List<Sprite> desires = new List<Sprite> ();
+	public List<Sprite> energyBars = new List<Sprite> ();
 	private string desireString = null;
 	public ShamanBehaviour otherShaman;
 	public Sprite currentDesire = null;
@@ -25,6 +26,7 @@ public class ShamanBehaviour : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
+		transform.Find ("Energy Bar").GetComponent<SpriteRenderer> ().sprite = energyBars [energy];
 		if (energyCooldown <= 0) {
 			if(energy == 0){
 				energy = 5;
@@ -56,6 +58,7 @@ public class ShamanBehaviour : MonoBehaviour {
 	}
 
 	private void setDesire(Sprite desire){
+		currentDesire = desire;
 		transform.Find ("Desire").GetComponent<SpriteRenderer> ().sprite = desire;
 	}
 
