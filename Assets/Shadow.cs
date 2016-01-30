@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using System.Collections;
 
 public class Shadow : MonoBehaviour {
@@ -54,4 +54,4 @@ class Point {
 		this.rad = rad;
 		this.drawRad = rad;
 	}
-}
+}*/
