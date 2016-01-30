@@ -30,7 +30,7 @@ public class Shadow : MonoBehaviour {
 		for (; j < points.Count; j++) {
 			Point p = points[j];
 			double x = centre - Math.Cos (p.getTheta()) * p.getRad();
-			double y = -Camera.main.orthographicSize - (Math.Sin (p.getTheta()) * p.getRad());
+			double y = -Camera.main.orthographicSize - Camera.main.orthographicSize * 0.05d + (Math.Sin (p.getTheta()) * p.getRad());
 			vertices[j] = new Vector2((float)x,(float) y);
 		}
 		vertices [j++] = new Vector2 ((float)+ size,(float) -size);
@@ -178,7 +178,7 @@ public class Shadow : MonoBehaviour {
 			for (; j < points.Count; j++) {
 				Point p = points [j];
 				double x = centre - Math.Cos (p.getTheta ()) * (p.getRad () + p.getDrawOffset ());
-				double y = -Camera.main.orthographicSize + (Math.Sin (p.getTheta ()) * (p.getRad () + p.getDrawOffset ()));
+				double y = -Camera.main.orthographicSize - Camera.main.orthographicSize * 0.05d + (Math.Sin (p.getTheta ()) * (p.getRad () + p.getDrawOffset ()));
 				vertices [j] = new Vector2 ((float)x, (float)y);
 			}
 			vertices [j++] = new Vector2 ((float)+ size, (float)-size);
