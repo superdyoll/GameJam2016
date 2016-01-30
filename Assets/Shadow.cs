@@ -47,8 +47,7 @@ public class Shadow : MonoBehaviour {
 		m.RecalculateNormals ();
 		m.RecalculateBounds ();
 		//Add to stuff
-		GameObject shadow = new GameObject ("Shadow");
-		shadow.AddComponent<MeshFilter> ().mesh = m;
+		this.GetComponent<MeshFilter> ().mesh = m;
 	}
 
 	// Use this for initialization
