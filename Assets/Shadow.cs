@@ -16,7 +16,7 @@ public class Shadow : MonoBehaviour {
 	private int updateCount = 0;
 	private int numSegments = 20;
 	private double exagDir;
-	private double exagAmnt = .005d;
+	private double exagAmnt = .01d;
 	private int updateLim = 120;
 	private double exagRange = (System.Math.PI / 10) / 2;
 
@@ -71,6 +71,19 @@ public class Shadow : MonoBehaviour {
 		for (int i = 0; i < numPoints; i++) {
 			points.Add (new Point (increment * i, lim));
 		}
+	}
+
+	bool isInScreen(Vector2 v) {
+		float height_2 = Camera.main.orthographicSize;
+		float width = height_2 * Camera.main.aspect;
+		float x = v.x;
+		float y = v.y;
+		if (x > -width && x < width) {
+			if (y > - height && y < height) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// Use this for initialization
