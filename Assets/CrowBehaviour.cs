@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CrowBehaviour : MonoBehaviour {
 
@@ -8,13 +9,13 @@ public class CrowBehaviour : MonoBehaviour {
 	private bool moving;
 	public Animator animation;
 	private Vector2 target;
-	private float maxSpeed;
+	public float maxSpeed;
 	public int obedience;
 	public bool facingLeft;
 
 	// Use this for initialization
 	void Start () {
-		maxSpeed = 5;
+	
 	}
 	
 	// Update is called once per frame
@@ -51,6 +52,8 @@ public class CrowBehaviour : MonoBehaviour {
 			facingLeft = true;
 			transform.localRotation = Quaternion.Euler (0, 0, 0);
 		}
+
+		checkDarkCollide ();
 	}
 
 	void CastSelectRay() {
@@ -63,6 +66,21 @@ public class CrowBehaviour : MonoBehaviour {
 		} else {
 			animation.speed = 1;
 			selected = false;
+		}
+	}
+
+	void checkDarkCollide() {
+		CircleCollider2D collider = this.GetComponent<CircleCollider2D> ();
+		Shadow shadow = GameObject.Find ("Shadow").GetComponent<Shadow> ();
+		List<Point> points = shadow.getPoints();
+		for (int i = 0; i < points.Count; i++) {
+			Point p = points[i];
+			if (collider.bounds.Contains(new Vector3((float) p.getX(), (float) p.getY(), 0))) {
+				Debug.Log ("Crow colliding with shadow");
+			}
+			while (collider.bounds.Contains(new Vector3((float) p.getX(), (float) p.getY(), 0))) {
+				p.setRad(p.getRad() + p.getRad () * 0.1f);
+			}
 		}
 	}
 
@@ -96,7 +114,9 @@ public class CrowBehaviour : MonoBehaviour {
 		if (furthestDistance > 0) {
 			double t = 2 * Math.PI * rand.NextDouble();
 			double u = 0;
+			Debug.Log("Furthest Distance " + furthestDistance);
 			for (int i = furthestDistance; i > 0; i--) {
+				Debug.Log("I'm adding a thing");
 				u = u + rand.NextDouble();
 			}
 			double r = u;
@@ -105,8 +125,8 @@ public class CrowBehaviour : MonoBehaviour {
 			}
 			double xAdjust = r * Math.Cos (t);
 			double yAdjust = r * Math.Sin (t);
-			//Debug.Log("t = " + t + " u = " + u + " r = " + r);
-			//Debug.Log("xAdjust = " + xAdjust + " yAdjust = " + yAdjust);
+			Debug.Log("t = " + t + " u = " + u + " r = " + r);
+			Debug.Log("xAdjust = " + xAdjust + " yAdjust = " + yAdjust);
 			center.x = center.x + (float) xAdjust;
 			center.y = center.y + (float) yAdjust;
 			return center;

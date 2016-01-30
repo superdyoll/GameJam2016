@@ -45,6 +45,7 @@ public class Shadow : MonoBehaviour {
 			v3[i] = new Vector3(vertices[i].x, vertices[i].y, 0);
 		}
 
+
 		Mesh m = new Mesh ();
 		m.vertices = v3;
 		m.triangles = indices;
@@ -54,6 +55,10 @@ public class Shadow : MonoBehaviour {
 		
 		//Add to stuff
 		this.GetComponent<MeshFilter> ().mesh = m;
+	}
+
+	public List<Point> getPoints() {
+		return points;
 	}
 
 	void pointsInit() {
@@ -175,61 +180,70 @@ public class Shadow : MonoBehaviour {
 		m.RecalculateBounds ();
 	}
 
-	class Point { 
-		double theta;
-		double rad ;
-		double drawOffset ;
-		int wiggleCount;
-		bool wiggleOutwards;
-		
-		public Point(double theta, double rad) {
-			this.theta = theta;
-			this.rad = rad;
-			this.drawOffset = 0;
-			System.Random rand = new System.Random ();
-			wiggleOutwards = rand.Next (2) == 1;
-			wiggleCount = 0;
-		}
+}
 
-		public double getTheta() {
-			return theta;
-		}
-		
-		public void setTheta(double theta) {
-			this.theta = theta;
-		}
-		
-		public double getRad() {
-			return rad;
-		}
-		
-		public void setRad(double rad) {
-			this.rad = rad;
-		}
-
-		public bool isWiggleOutwards() {
-			return wiggleOutwards;
-		}
-		
-		public void setWiggleOutwards(bool wiggleOutwards) {
-			this.wiggleOutwards = wiggleOutwards;
-		}
-		
-		public int getWiggleCount() {
-			return wiggleCount;
-		}
-		
-		public void setWiggleCount(int wiggleCount) {
-			this.wiggleCount = wiggleCount;
-		}
-		
-		public double getDrawOffset() {
-			return drawOffset;
-		}
-		
-		public void setDrawOffset(double drawOffset) {
-			this.drawOffset = drawOffset;
-		}
+public class Point { 
+	double theta;
+	double rad ;
+	double drawOffset ;
+	int wiggleCount;
+	bool wiggleOutwards;
 	
+	public Point(double theta, double rad) {
+		this.theta = theta;
+		this.rad = rad;
+		this.drawOffset = 0;
+		System.Random rand = new System.Random ();
+		wiggleOutwards = rand.Next (2) == 1;
+		wiggleCount = 0;
 	}
+
+	public double getX() {
+		return Math.Cos (getTheta()) * (getRad () + getDrawOffset());
+	}
+
+	public double getY() {
+		return -Camera.main.orthographicSize + (Math.Sin (getTheta()) * (getRad() + getDrawOffset()));
+	}
+
+	public double getTheta() {
+		return theta;
+	}
+	
+	public void setTheta(double theta) {
+		this.theta = theta;
+	}
+	
+	public double getRad() {
+		return rad;
+	}
+	
+	public void setRad(double rad) {
+		this.rad = rad;
+	}
+	
+	public bool isWiggleOutwards() {
+		return wiggleOutwards;
+	}
+	
+	public void setWiggleOutwards(bool wiggleOutwards) {
+		this.wiggleOutwards = wiggleOutwards;
+	}
+	
+	public int getWiggleCount() {
+		return wiggleCount;
+	}
+	
+	public void setWiggleCount(int wiggleCount) {
+		this.wiggleCount = wiggleCount;
+	}
+	
+	public double getDrawOffset() {
+		return drawOffset;
+	}
+	
+	public void setDrawOffset(double drawOffset) {
+		this.drawOffset = drawOffset;
+	}
+	
 }
