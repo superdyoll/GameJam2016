@@ -47,8 +47,7 @@ public class Shadow : MonoBehaviour {
 		m.RecalculateNormals ();
 		m.RecalculateBounds ();
 		//Add to stuff
-		GameObject shadow = new GameObject ("Shadow");
-		shadow.AddComponent<MeshFilter> ().mesh = m;
+		this.GetComponent<MeshFilter> ().mesh = m;
 	}
 
 	// Use this for initialization
@@ -103,39 +102,40 @@ public class Shadow : MonoBehaviour {
 				} else {
 					p.setDrawOffset(p.getDrawOffset() + p.getRad() * wiggleAmnt);
 				}
-				p.wiggleOutwards = !p.wiggleOutwards;
+				p.setWiggleOutwards(!p.isWiggleOutwards());
 			} else {
-				if (p.wiggleOutwards) {
-					p.drawOffset += p.rad * wiggleAmnt;
+				if (p.isWiggleOutwards()) {
+					p.setDrawOffset(p.getDrawOffset() + p.getRad() * wiggleAmnt);
 				} else {
-					p.drawOffset -= p.rad * wiggleAmnt;
+					p.setDrawOffset(p.getDrawOffset() - p.getRad() * wiggleAmnt);
 				}
 			}
-			p.wiggleCount++;
-			if (p.wiggleCount > maxWiggles) {
-				p.wiggleOutwards = !p.wiggleOutwards;
-				p.wiggleCount = rand.Next(maxWiggles - 5);
+			p.setWiggleCount(p.getWiggleCount() + 1);
+			if (p.getWiggleCount() > maxWiggles) {
+				p.setWiggleOutwards(!p.isWiggleOutwards());
+				p.setWiggleCount(rand.Next (maxWiggles - 5));
 			}
 		}
 
 		Mesh m = GetComponent<MeshFilter> ().mesh;
-		Vector3[] vertices = m.vertices;
-		Vector3[] normals = m.normals;
+		Vector3[] v3 = m.vertices;
 		//Update the mesh
+
+		Vector2[] vertices = new Vector2[v3.Length];
 		for (int i = 0; i < points.Count; i++) {
-			double x = centre - Math.Cos (p.theta) * p.rad;
-			double y = height - Math.Sin (p.theta) * p.rad;
-			vertices[i] = new Vector2[] {x, y};
+			Point p = points[i];
+			double x = centre - Math.Cos (p.getTheta()) * p.getRad ();
+			double y = shadowHeight - Math.Sin (p.getTheta()) * p.getRad();
+			vertices[i] = new Vector2((float) x, (float) y);
 		}
 		
-		Triangulator t = new Triangulator (vertices);
+		Triangulator t = new Triangulator(vertices);
 		int[] indices = t.Triangulate ();
-		Vector3[] v3 = new Vector3[vertices.Length];
 		for (int i = 0; i < v3.Length; i++) {
 			v3[i] = new Vector3(vertices[i].x, vertices[i].y, 0);
 		}
 
-		m.vertices = vertices;
+		m.vertices = v3;
 		m.triangles = indices;
 		m.RecalculateNormals ();
 		m.RecalculateBounds ();
@@ -144,14 +144,14 @@ public class Shadow : MonoBehaviour {
 	class Point { 
 		double theta;
 		double rad ;
-		double drawRad ;
+		double drawOffset ;
 		int wiggleCount;
 		bool wiggleOutwards;
 		
 		public Point(double theta, double rad) {
 			this.theta = theta;
 			this.rad = rad;
-			this.drawRad = rad;
+			this.drawOffset = 0;
 			System.Random rand = new System.Random ();
 			wiggleOutwards = rand.Next (2) == 1;
 			wiggleCount = 0;
