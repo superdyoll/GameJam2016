@@ -14,7 +14,8 @@ public class CrowBehaviour : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		maxSpeed = 5;
+		maxSpeed = 3;
+		moving = false;
 	}
 	
 	// Update is called once per frame
@@ -23,6 +24,7 @@ public class CrowBehaviour : MonoBehaviour {
 		float move = transform.position.x - target.x;
 	
 		if ((Vector2)transform.position != target) {
+			moving = true;
 			float step = getCurrentSpeed () * Time.deltaTime;
 			transform.position = Vector2.MoveTowards (transform.position, target, step);
 		} else {
@@ -51,6 +53,12 @@ public class CrowBehaviour : MonoBehaviour {
 			facingLeft = true;
 			transform.localRotation = Quaternion.Euler (0, 0, 0);
 		}
+		
+		Debug.Log (obedience);
+		if (!moving && !selected && obedience < 5) {
+			Debug.Log("I'm going to wobble");
+			target = getRandomPoint((Vector2)transform.position, obedienceToDistance());
+		}
 	}
 
 	void CastSelectRay() {
@@ -68,7 +76,7 @@ public class CrowBehaviour : MonoBehaviour {
 
 	void CastMoveRay(){
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		target = getRandomPoint(ray.origin);
+		target = getRandomPoint(ray.origin, obedienceToDistance());
 		animation.speed = 1;
 		moving = true;
 		//Debug.Log ("Crow selected now moving to " + target);
@@ -90,9 +98,8 @@ public class CrowBehaviour : MonoBehaviour {
 		return 5 - obedience;
 	}
 
-    Vector2 getRandomPoint(Vector2 center){
+    Vector2 getRandomPoint(Vector2 center,int furthestDistance){
 		System.Random rand = new System.Random ();
-		int furthestDistance = obedienceToDistance();
 		if (furthestDistance > 0) {
 			double t = 2 * Math.PI * rand.NextDouble();
 			double u = 0;
