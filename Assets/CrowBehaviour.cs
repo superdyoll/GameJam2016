@@ -57,7 +57,6 @@ public class CrowBehaviour : MonoBehaviour {
 
 		checkDarkCollide ();
 		
-		Debug.Log (obedience);
 		if (!moving && !selected && obedience < 5) {
 			Debug.Log("I'm going to wobble");
 			target = getRandomPoint((Vector2)transform.position, obedienceToDistance());
@@ -84,7 +83,6 @@ public class CrowBehaviour : MonoBehaviour {
 		for (int i = 0; i < points.Count; i++) {
 			Point p = points[i];
 			if (collider.bounds.Contains(new Vector3((float) p.getX(), (float) p.getY(), 0))) {
-				Debug.Log ("Crow colliding with shadow");
 			}
 			while (collider.bounds.Contains(new Vector3((float) p.getX(), (float) p.getY(), 0))) {
 				p.setRad(p.getRad() + p.getRad () * 0.1f);
@@ -121,9 +119,7 @@ public class CrowBehaviour : MonoBehaviour {
 		if (furthestDistance > 0) {
 			double t = 2 * Math.PI * rand.NextDouble();
 			double u = 0;
-			Debug.Log("Furthest Distance " + furthestDistance);
 			for (int i = furthestDistance; i > 0; i--) {
-				Debug.Log("I'm adding a thing");
 				u = u + rand.NextDouble();
 			}
 			double r = u;
@@ -132,8 +128,6 @@ public class CrowBehaviour : MonoBehaviour {
 			}
 			double xAdjust = r * Math.Cos (t);
 			double yAdjust = r * Math.Sin (t);
-			Debug.Log("t = " + t + " u = " + u + " r = " + r);
-			Debug.Log("xAdjust = " + xAdjust + " yAdjust = " + yAdjust);
 			center.x = center.x + (float) xAdjust;
 			center.y = center.y + (float) yAdjust;
 			return center;
