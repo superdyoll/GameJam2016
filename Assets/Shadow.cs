@@ -199,7 +199,7 @@ public class Point {
 	}
 
 	public double getX() {
-		return Math.Cos (getTheta()) * (getRad () + getDrawOffset());
+		return -Math.Cos (getTheta()) * (getRad () + getDrawOffset());
 	}
 
 	public double getY() {

@@ -83,12 +83,35 @@ public class CrowBehaviour : MonoBehaviour {
 		List<Point> points = shadow.getPoints();
 		for (int i = 0; i < points.Count; i++) {
 			Point p = points[i];
-			if (collider.bounds.Contains(new Vector3((float) p.getX(), (float) p.getY(), 0))) {
-				Debug.Log ("Crow colliding with shadow");
-			}
-			while (collider.bounds.Contains(new Vector3((float) p.getX(), (float) p.getY(), 0))) {
-				p.setRad(p.getRad() + p.getRad () * 0.1f);
-			}
+			double end = p.getRad () * 100;
+
+			double top;
+			double bottom;
+			bool check;
+			//do {
+			//	double startX = -Math.Cos (p.getTheta()) * (p.getRad() + p.getDrawOffset());
+			//	double startY = -Camera.main.orthographicSize + (Math.Sin (p.getTheta()) * (p.getRad() + p.getDrawOffset()));
+				
+			//	double endX = -Math.Cos(p.getTheta ()) * end;
+			//	double endY = -Camera.main.orthographicSize + Math.Sin (p.getTheta()) * end;
+				
+			//	double circleX = collider.bounds.center.x;
+			//	double circleY = collider.bounds.center.y;
+			//	double radius = collider.radius;
+
+			//	double a = endX - startX;
+			//	double b = startY - endY;
+			//	double c = (startX - endX) * startY + startX * (endY - startY);
+
+			//	top = Math.Abs (a * circleX + b * circleY + c);
+			//	bottom = Math.Sqrt((endX - startX) * (endX - startX) + (startY - endY) * (startY - endY));
+
+			//	Debug.Log("Top over bottom " + top / bottom);
+			//	check = (top / bottom) <= radius;
+			//	if (check) {
+			//		p.setRad(p.getRad() + p.getRad () * 0.1d);
+			//	}
+			//} while (check);
 		}
 	}
 
