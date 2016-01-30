@@ -94,10 +94,12 @@ public class CrowBehaviour : MonoBehaviour {
 		System.Random rand = new System.Random ();
 		int furthestDistance = obedienceToDistance();
 		if (furthestDistance > 0) {
-			double t = 2 * Math.PI * rand.NextDouble ();
+			double t = 2 * Math.PI * rand.NextDouble();
 			double u = 0;
-			for (int x = furthestDistance; x == 0; x--) {
-				u += rand.NextDouble ();
+			Debug.Log("Furthest Distance " + furthestDistance);
+			for (int i = furthestDistance; i > 0; i--) {
+				Debug.Log("I'm adding a thing");
+				u = u + rand.NextDouble();
 			}
 			double r = u;
 			if (u > furthestDistance) {
@@ -105,7 +107,7 @@ public class CrowBehaviour : MonoBehaviour {
 			}
 			double xAdjust = r * Math.Cos (t);
 			double yAdjust = r * Math.Sin (t);
-			Debug.Log("t = " + t + " u = " + u + "r = " + r);
+			Debug.Log("t = " + t + " u = " + u + " r = " + r);
 			Debug.Log("xAdjust = " + xAdjust + " yAdjust = " + yAdjust);
 			center.x = center.x + (float) xAdjust;
 			center.y = center.y + (float) yAdjust;
