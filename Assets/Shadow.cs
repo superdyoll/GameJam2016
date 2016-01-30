@@ -71,6 +71,8 @@ public class Shadow : MonoBehaviour {
 		GetComponent<Renderer> ().material.shader = Shader.Find ("Transparent/Diffuse");
 		GetComponent<Renderer> ().material.color = new Color (0.1f, 0.1f, 0.1f, 1f);
 
+		GetComponent<Renderer> ().sortingLayerID = GetComponent<Transform>().parent.GetComponent<Renderer>().sortingLayerID;
+
 		Camera cam = Camera.main;
 		float height = 2f * cam.orthographicSize;
 		float width = height * cam.aspect;
