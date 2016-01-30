@@ -9,7 +9,7 @@ public class CrowBehaviour : MonoBehaviour {
 	private bool moving;
 	public Animator animation;
 	private Vector2 target;
-	public float maxSpeed;
+	private float maxSpeed;
 	public int obedience;
 	public bool facingLeft;
 
@@ -69,12 +69,14 @@ public class CrowBehaviour : MonoBehaviour {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit2D hit = Physics2D.Raycast (ray.origin, ray.direction, Mathf.Infinity);
 		if (hit.collider == this.GetComponent<BoxCollider2D>()) {
+			Debug.Log("Bird Selected");
 			animation.speed = 0;
 			selected = true;
 			moving = false;
 		} else {
 			animation.speed = 1;
 			selected = false;
+			moving = true;
 		}
 	}
 
@@ -84,11 +86,12 @@ public class CrowBehaviour : MonoBehaviour {
 		List<Point> points = shadow.getPoints();
 		for (int i = 0; i < points.Count; i++) {
 			Point p = points[i];
-			if (collider.bounds.Contains(new Vector3((float) p.getX(), (float) p.getY(), 0))) {
-			}
-			while (collider.bounds.Contains(new Vector3((float) p.getX(), (float) p.getY(), 0))) {
-				p.setRad(p.getRad() + p.getRad () * 0.1f);
-			}
+			double end = p.getRad () * 100;
+
+			double top;
+			double bottom;
+			bool check;
+
 		}
 	}
 
@@ -97,7 +100,7 @@ public class CrowBehaviour : MonoBehaviour {
 		target = getRandomPoint(ray.origin, obedienceToDistance());
 		animation.speed = 1;
 		moving = true;
-		//Debug.Log ("Crow selected now moving to " + target);
+		Debug.Log ("Crow selected now moving to " + target);
 	}
 
 	float getCurrentSpeed(){
