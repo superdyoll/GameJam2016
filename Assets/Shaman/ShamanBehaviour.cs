@@ -13,9 +13,10 @@ public class ShamanBehaviour : MonoBehaviour {
 	private GameObject desireObject;
 	private int energy = 5;
 	private float energyCooldown = 0;
+	private int sequenceNo = 3;
 
 	private int correctCount = 0;
-	private int correctUpdate = 2;
+	private int correctUpdate = 8;
 
 	// Use this for initialization
 	void Start () {
@@ -55,10 +56,11 @@ public class ShamanBehaviour : MonoBehaviour {
 						}
 						desireString = null;
 					} else {
+						sequenceNo = 3;
 						requestInspiration ();
 					}
 					lastInspirationRequest = 0;
-					inspirationTimer = Random.Range (1.5f, 3f);
+					inspirationTimer = Random.Range (5f, 7f);
 				}
 			} else {
 				Vector3 rot = desireObject.transform.rotation.eulerAngles;
@@ -79,24 +81,23 @@ public class ShamanBehaviour : MonoBehaviour {
 	private void checkInput(){
 		if (desireString != null) {
 			foreach (char c in Input.inputString) {
-				if (c == desireString [positionInString]) {
-					++positionInString;
-					if (positionInString >= desireString.Length) {
+				if (c == desireString[0]) {
+					if(sequenceNo == 0){
 						setDesire (null);
 						GameObject.Find ("Shadow").GetComponent<Shadow>().pushback();
-						correctCount++;
-						if (correctCount == correctUpdate) {
-							energy++;
-							correctCount = 0;
-						}
-						if (energy > desires.Count) {
-							energy = desires.Count;
-						}
-						positionInString = 0;
-						break;
+					} else {
+						requestInspiration();
+						--sequenceNo;
 					}
-				} else {
-					positionInString = 0;
+					correctCount++;
+					if (correctCount == correctUpdate) {
+						energy++;
+						correctCount = 0;
+					}
+					if (energy > desires.Count) {
+						energy = desires.Count;
+					}
+					break;
 				}
 			}
 		}
@@ -113,6 +114,9 @@ public class ShamanBehaviour : MonoBehaviour {
 		List<Sprite> possibleDesires = new List<Sprite> ();
 		possibleDesires.AddRange (desires);
 		possibleDesires.RemoveAt (4);
+		if (currentDesire != null) {
+			possibleDesires.Remove (currentDesire);
+		}
 		if (otherShaman.currentDesire != null) {
 			possibleDesires.Remove(otherShaman.currentDesire);
 		}
