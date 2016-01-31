@@ -13,6 +13,9 @@ public class CrowBehaviour : MonoBehaviour {
 	public float maxSpeed;
 	public System.Random rand;
 	public GameObject selected;
+	public AudioSource soundEffects;
+	public AudioClip crowLevel5,crowLevel3,crowLevel1,crowLevel0;
+
 
 	// Use this for initialization
 	void Start () {
@@ -24,7 +27,28 @@ public class CrowBehaviour : MonoBehaviour {
 	public void setSelected(bool b){
 		moving = !b;
 		selected.SetActive (b);
+		switch (shaman.getCurrentEnergy ()) {
+		case 5:
+			soundEffects.clip = crowLevel5;
+			break;
+		case 4:
+		case 3:
+			soundEffects.clip = crowLevel3;
+			break;
+		case 2:
+		case 1:
+			soundEffects.clip = crowLevel1;
+			break;
+		case 0:
+			soundEffects.clip = crowLevel0;
+			break;
+		default:
+			soundEffects.clip = crowLevel3;
+			break;
+		}
+		soundEffects.Play ();
 	}
+
 	// Update is called once per frame
 	void Update () {
 		if (GameObject.Find ("Main Camera").GetComponent<SkyColouring> ().ready) {
