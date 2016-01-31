@@ -30,10 +30,11 @@ public class DarknessCollision : MonoBehaviour {
 		Shadow shadow = GameObject.Find ("Shadow").GetComponent<Shadow> ();
 		List<Point> points = shadow.getPoints();
 		List<Vector2> boxCheckSquarePoints = new List<Vector2> ();
-		boxCheckSquarePoints.Add (new Vector2 (transform.position.x + 1, transform.position.y + 1));
-		boxCheckSquarePoints.Add (new Vector2 (transform.position.x - 1, transform.position.y + 1));
-		boxCheckSquarePoints.Add (new Vector2 (transform.position.x + 1, transform.position.y - 1));
-		boxCheckSquarePoints.Add (new Vector2 (transform.position.x - 1, transform.position.y - 1));
+		float boxSize = 1.5f;
+		boxCheckSquarePoints.Add (new Vector2 (transform.position.x + boxSize, transform.position.y + boxSize));
+		boxCheckSquarePoints.Add (new Vector2 (transform.position.x - boxSize, transform.position.y + boxSize));
+		boxCheckSquarePoints.Add (new Vector2 (transform.position.x + boxSize, transform.position.y - boxSize));
+		boxCheckSquarePoints.Add (new Vector2 (transform.position.x - boxSize, transform.position.y - boxSize));
 		for (int j = 0; j < 4; j++) {
 			checkCollidesPoint(boxCheckSquarePoints[j], points, collider);
 		}
@@ -48,7 +49,7 @@ public class DarknessCollision : MonoBehaviour {
 	private bool intersects(float cx, float cy, float radius,
 	                        float p1x, float p1y, float p2x, float p2y)
 	{
-		float dx, dy, A, B, C, det, t;
+		float dx, dy, A, B, C, det;
 		
 		dx = p2x - p1x;
 		dy = p2y - p1y;
@@ -59,8 +60,8 @@ public class DarknessCollision : MonoBehaviour {
 
 		float camY = Camera.main.orthographicSize;
 		A = dx * dx + dy * dy;
-		B = 2 * (dx * (p1x - cx) + dy * ((p1y - camY) - (cy + camY)));
-		C = (p1x - cx) * (p1x - cx) + ((p1y - camY) - (cy + camY)) * ((p1y - camY) - (cy + camY)) - radius * radius;
+		B = 2 * (dx * (p1x - cx) + dy * ((p1y - camY) - cy));
+		C = (p1x - cx) * (p1x - cx) + ((p1y - camY) - cy) * ((p1y - camY) - cy) - radius * radius;
 		
 		det = B * B - 4 * A * C;
 		if ((A <= 0.0000001) || (det < 0))

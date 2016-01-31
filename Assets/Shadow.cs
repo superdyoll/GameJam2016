@@ -4,6 +4,7 @@ using System;
 
 public class Shadow : MonoBehaviour {
 
+	public Material m;
 	private double size;
 	private double centre;
 
@@ -14,7 +15,6 @@ public class Shadow : MonoBehaviour {
 	private double wiggleLim = 0.05d;
 
 	private int updateCount = 0;
-	private int numSegments = 20;
 	private double exagDir;
 	private double exagAmnt = .01d;
 	private int updateLim = 120;
@@ -57,10 +57,6 @@ public class Shadow : MonoBehaviour {
 		this.GetComponent<MeshFilter> ().mesh = m;
 	}
 
-	void OnCollisionEnter(Collision collision) {
-
-	}
-
 	public List<Point> getPoints() {
 		return points;
 	}
@@ -90,6 +86,7 @@ public class Shadow : MonoBehaviour {
 	void Start () {
 		maxVariation = 0.03d / delay;
 		GetComponent<Renderer> ().material.shader = Shader.Find ("Transparent/Diffuse");
+		GetComponent<Renderer> ().material = m;
 		GetComponent<Renderer> ().material.color = new Color (0.1f, 0.1f, 0.1f, 1f);
 
 		GetComponent<Renderer> ().sortingLayerID = GetComponent<Transform>().parent.GetComponent<Renderer>().sortingLayerID;
