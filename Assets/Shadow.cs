@@ -199,7 +199,7 @@ public class Shadow : MonoBehaviour {
 
 	public void pushback(){
 		for (int i = 0; i < points.Count; i++) {
-			double newRad = points[i].getRad () + size * 0.025d;
+			double newRad = points[i].getRad () + size * 0.075d;
 			if (newRad >= size) {
 				newRad = size;
 			}
