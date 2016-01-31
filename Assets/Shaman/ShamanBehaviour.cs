@@ -77,7 +77,7 @@ public class ShamanBehaviour : MonoBehaviour {
 			foreach (char c in Input.inputString) {
 				if (c == desireString [positionInString]) {
 					++positionInString;
-					if (positionInString == desireString.Length) {
+					if (positionInString >= desireString.Length) {
 						setDesire (null);
 						positionInString = 0;
 						break;
