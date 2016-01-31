@@ -53,9 +53,11 @@ public class MouseBehaviour : MonoBehaviour {
 		if (Input.GetMouseButtonDown (0)) {
 			CastSelectRay ();
 		}
-		
-		if (Input.GetMouseButtonDown (1) && crowSelected != null) {
-			CastMoveRay ();
+
+		if (crowSelected.shaman.getCurrentEnergy () != 0) {
+			if (Input.GetMouseButtonDown (1) && crowSelected != null) {
+				CastMoveRay ();
+			}
 		}
 		mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		mousePosition.z = 0;

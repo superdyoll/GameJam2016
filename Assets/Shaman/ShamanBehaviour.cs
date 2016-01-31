@@ -98,6 +98,18 @@ public class ShamanBehaviour : MonoBehaviour {
 						energy = desires.Count;
 					}
 					break;
+				} else {
+					--energy;
+					correctCount = 0;
+					if (energy <= 0) {
+						energy = 0;
+						energyCooldown = 10;
+						setDesire (desires [4]);
+						sequenceNo = 0;
+					} else {
+						setDesire (null);
+					}
+					desireString = null;
 				}
 			}
 		}
