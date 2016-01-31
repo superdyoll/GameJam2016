@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 
 public class ShamanBehaviour : MonoBehaviour {
-	private float lastInspirationRequest = 0f;
-	private int inspirationTimer, positionInString = 0;
+	private float lastInspirationRequest = 0f, inspirationTimer;
+	private int positionInString = 0;
 	private float originalX, originalY, thisx = 0, thisy, ySpeed;
 	public List<Sprite> desires = new List<Sprite> ();
 	public List<Sprite> energyBars = new List<Sprite> ();
@@ -38,7 +38,7 @@ public class ShamanBehaviour : MonoBehaviour {
 				}
 				lastInspirationRequest += Time.deltaTime;
 				if (inspirationTimer == 0) {
-					inspirationTimer = Random.Range (5, 10);
+					inspirationTimer = Random.Range (2, 5);
 				} else if (inspirationTimer < lastInspirationRequest) {
 					if (currentDesire != null) {
 						--energy;
@@ -54,7 +54,7 @@ public class ShamanBehaviour : MonoBehaviour {
 						requestInspiration ();
 					}
 					lastInspirationRequest = 0;
-					inspirationTimer = Random.Range (5, 10);
+					inspirationTimer = Random.Range (1.5f, 3f);
 				}
 			} else {
 				Vector3 rot = desireObject.transform.rotation.eulerAngles;

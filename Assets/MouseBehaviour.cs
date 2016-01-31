@@ -60,7 +60,7 @@ public class MouseBehaviour : MonoBehaviour {
 		mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		mousePosition.z = 0;
 		if (crowSelected != null) {
-			radius = (6 - crowSelected.shaman.getCurrentEnergy ()) / 2;
+			radius = (6 - crowSelected.shaman.getCurrentEnergy ());
 			if (target == new Vector2(0, 0)) {
 				float angle = Random.Range (0.001f, 1.000f) * Mathf.PI * 2;
 				x = Mathf.Cos (angle) * radius;
