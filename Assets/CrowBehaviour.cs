@@ -19,9 +19,9 @@ public class CrowBehaviour : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		maxSpeed = 3;
+		maxSpeed = 3 - Application.loadedLevel;
 		rand = new System.Random ();
-		selected.SetActive (false);
+		selected.SetActive (true);
 	}
 
 	public void setSelected(bool b){
