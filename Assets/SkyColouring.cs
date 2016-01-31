@@ -10,6 +10,7 @@ public class SkyColouring : MonoBehaviour {
 	void Start () {
 		introText = GameObject.Find ("Panel");
 		introText.SetActive (true);
+		Cursor.visible = false;
 	}
 	
 	// Update is called once per frame
