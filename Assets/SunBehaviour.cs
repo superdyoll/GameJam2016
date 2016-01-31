@@ -31,7 +31,7 @@ public class SunBehaviour : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(gameWinTimer > 2.5f){
+		if(gameWinTimer > 1.5f){
 			if(Application.loadedLevel == 2){
 				Application.LoadLevel(0);
 			} else {
