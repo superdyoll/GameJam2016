@@ -84,8 +84,8 @@ public class Shadow : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		maxVariation = 0.02d / delay;
-		maxVariation = maxVariation + Application.loadedLevel / 50;
+		maxVariation = 0.04d / delay;
+		maxVariation = maxVariation + Application.loadedLevel / 30;
 		GetComponent<Renderer> ().material.shader = Shader.Find ("Transparent/Diffuse");
 		GetComponent<Renderer> ().material = m;
 		GetComponent<Renderer> ().material.color = new Color (0.1f, 0.1f, 0.1f, 1f);

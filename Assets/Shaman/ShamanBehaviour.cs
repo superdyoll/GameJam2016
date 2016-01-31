@@ -60,7 +60,7 @@ public class ShamanBehaviour : MonoBehaviour {
 						requestInspiration ();
 					}
 					lastInspirationRequest = 0;
-					inspirationTimer = Random.Range (5f, 7f);
+					inspirationTimer = Random.Range (3f, 5f);
 				}
 			} else {
 				Vector3 rot = desireObject.transform.rotation.eulerAngles;
