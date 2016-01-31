@@ -14,6 +14,9 @@ public class ShamanBehaviour : MonoBehaviour {
 	private int energy = 5;
 	private float energyCooldown = 0;
 
+	private int correctCount = 0;
+	private int correctUpdate = 2;
+
 	// Use this for initialization
 	void Start () {
 		originalX = transform.position.x;
@@ -42,6 +45,7 @@ public class ShamanBehaviour : MonoBehaviour {
 				} else if (inspirationTimer < lastInspirationRequest) {
 					if (currentDesire != null) {
 						--energy;
+						correctCount = 0;
 						if (energy <= 0) {
 							energy = 0;
 							energyCooldown = 10;
@@ -50,7 +54,7 @@ public class ShamanBehaviour : MonoBehaviour {
 							setDesire (null);
 						}
 						desireString = null;
-					} else {	
+					} else {
 						requestInspiration ();
 					}
 					lastInspirationRequest = 0;
@@ -79,6 +83,14 @@ public class ShamanBehaviour : MonoBehaviour {
 					++positionInString;
 					if (positionInString == desireString.Length) {
 						setDesire (null);
+						correctCount++;
+						if (correctCount == correctUpdate) {
+							energy++;
+							correctCount = 0;
+						}
+						if (energy > desires.Count) {
+							energy = desires.Count;
+						}
 						positionInString = 0;
 						break;
 					}
