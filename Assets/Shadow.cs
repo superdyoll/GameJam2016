@@ -10,7 +10,7 @@ public class Shadow : MonoBehaviour {
 
 	private int numPoints = 50;
 	private double delay = 1000/60;
-	private double maxVariation;
+	public double maxVariation;
 	private double wiggle = 0.002d;
 	private double wiggleLim = 0.05d;
 
@@ -84,7 +84,7 @@ public class Shadow : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		maxVariation = 0.015d / delay;
+		maxVariation = 0.02d / delay;
 		maxVariation = maxVariation + Application.loadedLevel / 50;
 		GetComponent<Renderer> ().material.shader = Shader.Find ("Transparent/Diffuse");
 		GetComponent<Renderer> ().material = m;
@@ -199,7 +199,11 @@ public class Shadow : MonoBehaviour {
 
 	public void pushback(){
 		for (int i = 0; i < points.Count; i++) {
-			points[i].setRad (points[i].getRad () + 1);
+			double newRad = points[i].getRad () + size * 0.025d;
+			if (newRad >= size) {
+				newRad = size;
+			}
+			points[i].setRad(newRad);
 		}
 	}
 }

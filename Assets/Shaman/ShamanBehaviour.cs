@@ -90,6 +90,7 @@ public class ShamanBehaviour : MonoBehaviour {
 			if (positionInString >= desireString.Length) {
 				setDesire (null);
 				correctCount++;
+				GameObject.Find ("Shadow").GetComponent<Shadow>().pushback();
 				if (correctCount == correctUpdate) {
 					energy++;
 					correctCount = 0;
