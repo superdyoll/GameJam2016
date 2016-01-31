@@ -64,14 +64,9 @@ public class DarknessCollision : MonoBehaviour {
 		C = (p1x - cx) * (p1x - cx) + ((p1y - camY) - cy) * ((p1y - camY) - cy) - radius * radius;
 		
 		det = B * B - 4 * A * C;
-		if ((A <= 0.0000001) || (det < 0))
-		{
-			// No real solutions.
+		if ((A <= 0.0000001) || (det < 0)) {
 			return false;
-		}
-		else
-		{
-			// Two solutions
+		} else {
 			return isInSquare(cx, cy, radius, p1x, p1y, p2x, p2y);
 		}
 	}
