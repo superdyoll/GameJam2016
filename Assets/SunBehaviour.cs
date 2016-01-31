@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class SunBehaviour : MonoBehaviour {
+<<<<<<< HEAD
 
 	public AudioSource audioSource;
 
@@ -11,7 +12,7 @@ public class SunBehaviour : MonoBehaviour {
 	public GameObject gameOver, gameWin;
 	public int level;
 
-	private float yOrigin = -5, maxY = 2;
+	private float yOrigin = -5;
 	private float percentageRisen = 0, maxRiseRate, currentRiseRate = 0;
 	private Shadow shadowScript;
 

@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class SkyScroll : MonoBehaviour {
-	float yOrigin = 10, yFinal = -10;
+	float yOrigin = 10;
 	float percentageRisen = 0;
 	private SunBehaviour sun;
 	// Use this for initialization
@@ -15,7 +15,7 @@ public class SkyScroll : MonoBehaviour {
 		if (GameObject.Find ("Main Camera").GetComponent<SkyColouring> ().ready) {
 			percentageRisen = sun.getPercentageRisen ();
 			float yPosition = 20f / 100f * percentageRisen;
-			transform.position = new Vector3 (transform.position.x, yOrigin - yPosition, 0);
+			transform.position = new Vector3 (transform.position.x, yOrigin - yPosition, 1);
 		}
 	}
 }
