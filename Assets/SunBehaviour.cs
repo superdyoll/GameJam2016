@@ -11,7 +11,7 @@ public class SunBehaviour : MonoBehaviour {
 	public GameObject gameOver, gameWin;
 	public int level;
 
-	private float yOrigin = -5;
+	private float yOrigin = -5, gameWinTimer = -1;
 	private float percentageRisen = 0, maxRiseRate, currentRiseRate = 0;
 	private Shadow shadowScript;
 
@@ -27,8 +27,19 @@ public class SunBehaviour : MonoBehaviour {
 		return percentageRisen;
 	}
 
+
+
 	// Update is called once per frame
 	void Update () {
+		if(gameWinTimer > 5){
+			if(Application.loadedLevel == 2){
+				Application.LoadLevel(0);
+			} else {
+				Application.LoadLevel(Application.loadedLevel + 1);
+			}
+		} else if (gameWinTimer > -1) {
+			gameWinTimer += Time.deltaTime;
+		}
 		setMaxRiseRate ();
 		if (GameObject.Find ("Main Camera").GetComponent<SkyColouring> ().ready) {
 			currentRiseRate = ((shadowScript.getBlackAverage () * 2) - 100f) / 100f * maxRiseRate;
@@ -41,8 +52,8 @@ public class SunBehaviour : MonoBehaviour {
 			if (percentageRisen >= 100) {
 				percentageRisen = 100f;
 				gameWin.SetActive (true);
-				Time.timeScale = 0;
-			} else if (percentageRisen <= 0f) {
+				gameWinTimer = 0;
+			} else if (percentageRisen <= 0f && !gameWin.activeInHierarchy) {
 				if (audioSource.clip != audioLose){
 					audioSource.clip = audioLose;
 					audioSource.Play ();

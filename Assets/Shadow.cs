@@ -24,7 +24,7 @@ public class Shadow : MonoBehaviour {
 
 	private int maxWiggles = 30;
 
-	void meshInit() {
+	public void meshInit() {
 		Vector2[] vertices = new Vector2[points.Count + 4];
 		int j = 0;
 		for (; j < points.Count; j++) {
@@ -85,6 +85,7 @@ public class Shadow : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		maxVariation = 0.03d / delay;
+		maxVariation = maxVariation + Application.loadedLevel / 100;
 		GetComponent<Renderer> ().material.shader = Shader.Find ("Transparent/Diffuse");
 		GetComponent<Renderer> ().material = m;
 		GetComponent<Renderer> ().material.color = new Color (0.1f, 0.1f, 0.1f, 1f);

@@ -8,7 +8,6 @@ public class MouseBehaviour : MonoBehaviour {
 	private CrowBehaviour crowSelected;
 	// Use this for initialization
 	void Start () {
-	
 	}
 
 	void deselectCrow(){
@@ -50,6 +49,7 @@ public class MouseBehaviour : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
+		crowSelected = GameObject.Find ("Crow 1").GetComponent<CrowBehaviour>();
 		if (Input.GetMouseButtonDown (0)) {
 			CastSelectRay ();
 		}
