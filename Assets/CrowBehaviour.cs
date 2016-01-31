@@ -7,38 +7,36 @@ public class CrowBehaviour : MonoBehaviour {
 
 
 	public Animator crowAnimation;
-	public int obedience;
 	public ShamanBehaviour shaman;
-	private bool facingLeft;
-	private bool selected;
-	private bool moving = false;
-	private Vector2 target;
-	private float maxSpeed;
-	private System.Random rand;
+	public bool moving = false;
+	public Vector2 target;
+	public float maxSpeed;
+	public System.Random rand;
+	public GameObject selected;
 
 	// Use this for initialization
 	void Start () {
 		maxSpeed = 3;
 		rand = new System.Random ();
+		selected.SetActive (false);
 	}
-	
+
+	public void setSelected(bool b){
+		moving = !b;
+		selected.SetActive (b);
+	}
 	// Update is called once per frame
 	void Update () {
 		if (GameObject.Find ("Main Camera").GetComponent<SkyColouring> ().ready) {
 			// Select bird on Left Click
-			if (Input.GetMouseButtonDown (0)) {
-				//Debug.Log("Pressed left click, casting ray.");
-				CastSelectRay ();
-			}
-
-			// Move bird if selected
-			if (Input.GetMouseButtonDown (1) && selected) {
-				CastMoveRay ();
-			}
-
 			moveBird();
 
 			adjustDirection();
+
+			if(selected.activeInHierarchy){
+				Vector3 currentRot = selected.transform.rotation.eulerAngles;
+				selected.transform.rotation = Quaternion.Euler(new Vector3(currentRot.x, currentRot.y, currentRot.z + 7));
+			}
 
 			Shadow shadow = GameObject.Find ("Shadow").GetComponent<Shadow> ();
 			List<Point> points = shadow.getPoints();
@@ -54,13 +52,11 @@ public class CrowBehaviour : MonoBehaviour {
 		
 		//Face the bird right
 		if (move < 0) {
-			facingLeft = false;
 			transform.localRotation = Quaternion.Euler (0, 180, 0);
 		}
 		
 		//Face the bird left
 		if (move > 0) {
-			facingLeft = true;
 			transform.localRotation = Quaternion.Euler (0, 0, 0);
 		}
 	}
@@ -75,54 +71,18 @@ public class CrowBehaviour : MonoBehaviour {
 	}
 
 	void moveBird (){
-		if (target == null || isCloseToTarget()) {
+		if (isCloseToTarget()) {
 			target = getRandomPoint ((Vector2)transform.position, obedienceToDistance ());
 		} else if (moving) {
 			if (isCloseToTarget()){
 				target = getRandomPoint ((Vector2)transform.position, obedienceToDistance ());
 			} else {
-				float step = getCurrentSpeed () * Time.deltaTime;
+				float step = 3 * Time.deltaTime;
 				transform.position = Vector2.MoveTowards (transform.position, target, step);
 			}
 		}
 	}
-	
-	void CastSelectRay() {
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit2D hit = Physics2D.Raycast (ray.origin, ray.direction, Mathf.Infinity);
-		if (hit.collider != null && hit.collider.gameObject == this.gameObject) {
-			crowAnimation.speed = 0;
-			selected = true;
-			moving = false;
-		} else {
-			crowAnimation.speed = 1;
-			selected = false;
-			moving = true;
-		}
-	}
 
-	void CastMoveRay(){
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		target = getRandomPoint(ray.origin, obedienceToDistance());
-		crowAnimation.speed = 1;
-		moving = true;
-		//Debug.Log ("Crow selected now moving to " + target);
-	}
-
-
-
-	float getCurrentSpeed(){
-		if (moving) {
-			if (obedience < maxSpeed) {
-				return obedience + 1;
-			} else {
-				return maxSpeed;
-			}
-		} else {
-			return 0;
-		}
-	}
-	
 	int obedienceToDistance(){
 		return 20 - shaman.getCurrentEnergy() * 4;
 	}

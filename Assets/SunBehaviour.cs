@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class SunBehaviour : MonoBehaviour {
-	private float yOrigin = -5, maxY = 2;
+	private float yOrigin = -5;
 	private float percentageRisen = 0, maxRiseRate = 0.2f, currentRiseRate = 0;
 	private Shadow shadowScript;
 	public GameObject gameOver, gameWin;

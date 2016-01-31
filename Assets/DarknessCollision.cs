@@ -55,7 +55,7 @@ public class DarknessCollision : MonoBehaviour {
 	private bool intersects(float cx, float cy, float radius,
 	                        float p1x, float p1y, float p2x, float p2y)
 	{
-		float dx, dy, A, B, C, det, t;
+		float dx, dy, A, B, C, det;
 		
 		dx = p2x - p1x;
 		dy = p2y - p1y;

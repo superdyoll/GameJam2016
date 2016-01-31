@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class SkyScroll : MonoBehaviour {
-	float yOrigin = 10, yFinal = -10;
+	float yOrigin = 10;
 	float percentageRisen = 0;
 	private SunBehaviour sun;
 	// Use this for initialization

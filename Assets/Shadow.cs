@@ -14,7 +14,6 @@ public class Shadow : MonoBehaviour {
 	private double wiggleLim = 0.05d;
 
 	private int updateCount = 0;
-	private int numSegments = 20;
 	private double exagDir;
 	private double exagAmnt = .01d;
 	private int updateLim = 120;
