@@ -24,7 +24,7 @@ public class DarknessCollision : MonoBehaviour {
 		}
 		return false;
 	}
-	
+
 	void checkDarkCollide() {
 		CircleCollider2D collider = GetComponent<CircleCollider2D> ();
 		Shadow shadow = GameObject.Find ("Shadow").GetComponent<Shadow> ();
