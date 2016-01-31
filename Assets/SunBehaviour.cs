@@ -72,6 +72,9 @@ public class SunBehaviour : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.Escape)) {
 			Application.Quit();
 		}
+		if (Input.GetKeyDown (KeyCode.R)) {
+			Application.LoadLevel(0);
+		}
 	}
 
 	void setMaxRiseRate (){

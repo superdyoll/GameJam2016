@@ -54,7 +54,7 @@ public class MouseBehaviour : MonoBehaviour {
 			CastSelectRay ();
 		}
 
-		if (crowSelected.shaman.getCurrentEnergy () != 0) {
+		if (crowSelected != null && crowSelected.shaman.getCurrentEnergy () != 0) {
 			if (Input.GetMouseButtonDown (1) && crowSelected != null) {
 				CastMoveRay ();
 			}
