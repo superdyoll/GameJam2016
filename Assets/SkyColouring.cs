@@ -19,6 +19,8 @@ public class SkyColouring : MonoBehaviour {
 		if (currentTime > 5) {
 			introText.GetComponent<Image>().CrossFadeAlpha(0f, 2.0f, false);
 			introText.transform.Find("Text").GetComponent<Text>().CrossFadeAlpha(0f, 2.0f, false);
+			introText.transform.Find("Title").GetComponent<Text>().CrossFadeAlpha(0f, 2.0f, false);
+			introText.transform.Find("Season").GetComponent<Text>().CrossFadeAlpha(0f, 2.0f, false);
 			ready = true;
 		}
 	}
