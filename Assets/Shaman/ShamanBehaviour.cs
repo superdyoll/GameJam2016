@@ -77,26 +77,28 @@ public class ShamanBehaviour : MonoBehaviour {
 	}
 
 	private void checkInput(){
-		if (desireString != null) {
-			foreach (char c in Input.inputString) {
-				if (c == desireString [positionInString]) {
-					++positionInString;
-					if (positionInString >= desireString.Length) {
-						setDesire (null);
-						correctCount++;
-						if (correctCount == correctUpdate) {
-							energy++;
-							correctCount = 0;
-						}
-						if (energy > desires.Count) {
-							energy = desires.Count;
-						}
-						positionInString = 0;
-						break;
-					}
-				} else {
-					positionInString = 0;
+		if (desireString == null) {
+			positionInString = 0;
+			return;
+		}
+		foreach (char c in Input.inputString) {
+			if (c != desireString[positionInString]) {
+				positionInString = 0;
+				return;
+			}
+			++positionInString;
+			if (positionInString >= desireString.Length) {
+				setDesire (null);
+				correctCount++;
+				if (correctCount == correctUpdate) {
+					energy++;
+					correctCount = 0;
 				}
+				if (energy > desires.Count) {
+					energy = desires.Count;
+				}
+				positionInString = 0;
+				return;
 			}
 		}
 	}
