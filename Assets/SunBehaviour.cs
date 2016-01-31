@@ -62,6 +62,7 @@ public class SunBehaviour : MonoBehaviour {
 				}
 				percentageRisen = 0f;
 				gameOver.SetActive (true);
+				gameWinTimer = 0;
 				Time.timeScale = 0;
 			}
 			float yPosition = 7f / 100f * percentageRisen;
