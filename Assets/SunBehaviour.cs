@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class SunBehaviour : MonoBehaviour {
-<<<<<<< HEAD
 
 	public AudioSource audioSource;
 
