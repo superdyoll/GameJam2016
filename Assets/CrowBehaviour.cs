@@ -77,7 +77,7 @@ public class CrowBehaviour : MonoBehaviour {
 			if (isCloseToTarget()){
 				target = getRandomPoint ((Vector2)transform.position, obedienceToDistance ());
 			} else {
-				float step = 3 * Time.deltaTime;
+				float step = maxSpeed * Time.deltaTime;
 				transform.position = Vector2.MoveTowards (transform.position, target, step);
 			}
 		}
@@ -87,7 +87,7 @@ public class CrowBehaviour : MonoBehaviour {
 		return 20 - shaman.getCurrentEnergy() * 4;
 	}
 	
-	Vector2 getRandomPoint(Vector2 center,int furthestDistance){
+	public Vector2 getRandomPoint(Vector2 center,int furthestDistance){
 		if (furthestDistance > 0) {
 			double t = 2 * Math.PI * rand.NextDouble();
 			double u = 0;
