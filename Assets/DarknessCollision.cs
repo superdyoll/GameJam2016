@@ -6,13 +6,18 @@ public class DarknessCollision : MonoBehaviour {
 	public bool checkCollidesPoint(Vector2 point, List<Point> points, CircleCollider2D collider){
 		for (int i = 0; i < points.Count; i++) {
 			Point p = points [i];
-			double end = p.getRad () * 100;
+			//double end = p.getRad () * 100;
 			
 			double p1x = p.getX ();
 			double p1y = p.getY ();
-			
-			double p2x = -Math.Cos (p.getTheta ()) * end;
-			double p2y = - Camera.main.orthographicSize + (Math.Sin (p.getTheta ()) * end);			
+
+			Point p2 = new Point(p.getTheta(), p.getRad () * 100);
+			//double p2x = - Math.Cos (p.getTheta ()) * end;
+			//double p2y = - Camera.main.orthographicSize + (Math.Sin(p.getTheta()) * end);			
+
+			double p2x = p2.getX ();
+			double p2y = p2.getY ();
+
 			double cx = point.x;
 			double cy = point.y;
 			if (intersects ((float)cx, (float)cy, (float)collider.radius, (float)p1x, (float)p1y, (float)p2x, (float)p2y)) {
@@ -35,7 +40,7 @@ public class DarknessCollision : MonoBehaviour {
 		boxCheckSquarePoints.Add (new Vector2 (transform.position.x - boxSize, transform.position.y + boxSize));
 		boxCheckSquarePoints.Add (new Vector2 (transform.position.x + boxSize, transform.position.y - boxSize));
 		boxCheckSquarePoints.Add (new Vector2 (transform.position.x - boxSize, transform.position.y - boxSize));
-		for (int j = 0; j < 4; j++) {
+		for (int j = 0; j < boxCheckSquarePoints.Count; j++) {
 			checkCollidesPoint(boxCheckSquarePoints[j], points, collider);
 		}
 	}
@@ -47,8 +52,7 @@ public class DarknessCollision : MonoBehaviour {
 	}
 	
 	private bool intersects(float cx, float cy, float radius,
-	                        float p1x, float p1y, float p2x, float p2y)
-	{
+	                        float p1x, float p1y, float p2x, float p2y) {
 		float dx, dy, A, B, C, det;
 		
 		dx = p2x - p1x;
